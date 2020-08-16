@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>US Server (Gökhan)</h1>
+    <table class="table rwd-table" style="width:100%">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Source IP</th>
+            <th scope="col">Date
+                <button href="#collapsable1" class="custom-btn" id="collapse1" style="float: right;">
+                    <div id="icon1" class="fas fa-chevron-down rotate text-white"></div>
+                </button>
+            </th>
+        </tr>
+        </thead>
+        <tbody id="collapsable1">
+        {% for key,value in items1 %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ value['source_ip'] }}</td>
+                <td>{{ value['date'] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+    <br>
+    <h1>Europe Server (Ömer)</h1>
+    <table class="table rwd-table" style="width:100%">
+        <thead class="thead-dark">
+        <tr>
+            <th>#</th>
+            <th>Source IP</th>
+            <th>Date
+                <button href="#collapsable2" class="custom-btn" id="collapse2" style="float: right;">
+                    <div id="icon2" class="fa fa-chevron-down rotate text-white"></div>
+                </button>
+            </th>
+        </tr>
+        </thead>
+
+        <tbody id="collapsable2">
+        {% for key,value in items2 %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ value['source_ip'] }}</td>
+                <td>{{ value['date'] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+    <br>
+    <button class="btn btn-info" onclick="return false;" id="intersection" href="#">Intersections</button>
+    <br>
+    <br>
+    <table class="table rwd-table" id="intersections-table" style="width:100%">
+        <thead class="">
+        <tr>
+            <th>#</th>
+            <th>Source IP</th>
+            <th>Date1</th>
+            <th>Date2</th>
+            <th>Difference
+                <button href="#collapsable3" class="custom-btn" id="collapse3" style="float: right;">
+                    <div id="icon3" class="fas fa-chevron-down rotate text-white"></div>
+                </button>
+            </th>
+        </tr>
+        </thead>
+        <tbody id="collapsable3">
+        {% include 'includes/partial_intersection_template.html' %}
+        </tbody>
+    </table>
+{% endblock %}
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+{% block javascript %}
+    <script type="application/javascript">
+        var intersection = function () {
+            var btn = $(this);
+            $.ajax({
+                url: btn.attr("data-url"),
+                type: 'get',
+                dataType: 'json',
+                beforeSend: function () {
+                    //$("#modal-course .modal-content").html("");
+                },
+                success: function (data) {
+                    $("#intersections-table tbody").html(data.html_intersections);
+                }
+            });
+        };
+
+        $("#intersection").on("click", intersection);
+
+        $("#collapse1").on("click", function (event) {
+            event.preventDefault();
+            collapsable = $('#collapsable1');
+            if (collapsable.is(":visible")) {
+                $("#icon1").toggleClass("down");
+                collapsable.hide();
+            } else {
+                $("#icon1").removeClass("down");
+                collapsable.show();
+            }
+        });
+
+        $("#collapse2").on("click", function (event) {
+            event.preventDefault();
+            collapsable = $('#collapsable2');
+            if (collapsable.is(":visible")) {
+                $("#icon2").toggleClass("down");
+                collapsable.hide();
+            } else {
+                $("#icon2").removeClass("down");
+                collapsable.show();
+            }
+        });
+
+        $("#collapse3").on("click", function (event) {
+            event.preventDefault();
+            collapsable = $('#collapsable3');
+            if (collapsable.is(":visible")) {
+                $("#icon3").toggleClass("down");
+                collapsable.hide();
+            } else {
+                $("#icon3").removeClass("down");
+                collapsable.show();
+            }
+        });
+    </script>
+{% endblock %}

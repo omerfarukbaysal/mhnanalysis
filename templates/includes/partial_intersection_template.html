@@ -1,0 +1,9 @@
+{% for key,value in intersections %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ value['source_ip'] }}</td>
+            <td>{{ value['date1'] }}</td>
+            <td>{{ value['date2'] }}</td>
+            <td>{{ value['difference'] }} ago</td>
+        </tr>
+    {% endfor %}
