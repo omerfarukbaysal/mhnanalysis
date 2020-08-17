@@ -129,7 +129,8 @@ def home():
     # etc etc, flask app code
 
 app.run()
-```&nbsp;
+```
+&nbsp;
 ## What about my database config?
 
 Many guides on the Internet also suggest you put your database setup inside the `__main__` clause, like this:
@@ -141,6 +142,7 @@ if __name__ == '__main__':
 That will work fine on your machine, but, again, we don't want to use app.run() on [PythonAnywere](https://www.pythonanywhere.com/). But you'll still want to be able to run `db.create_all()` every so often on PythonAnywhere, to update your database tables or whatever it may be.
 
 Two solutions -- either just run it from a Bash console (remembering to activate your virtualenv first) and then Ctrl+C the flask server when it runs
+
 ```
 $ workon my-virtualenv
 (my-virtualenv)$ python flask_app.py
@@ -149,6 +151,7 @@ $ workon my-virtualenv
 (my-virtualenv)$
 ```
 Or make a clever little if in your main that checks if it's running on PythonAnywhere, eg:
+
 ```
 from socket import gethostname
 [...]
