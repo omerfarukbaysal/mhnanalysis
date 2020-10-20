@@ -2,3 +2,4 @@ myvenv
 .idea
 __pycache__
 session_backups
+api_key.txt

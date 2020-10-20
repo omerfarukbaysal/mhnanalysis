@@ -23,7 +23,7 @@ def analysis_file(filename):
     return data
 
 
-def dict_to_set(dic):
+def dictionary_to_set(dic):
     data = set()
     for v, k in dic.items():
         data.add(k['source_ip'])
@@ -35,40 +35,40 @@ def intersection_of_set(a, b):
 
 
 @app.route('/')
-def hello_world():
-    items1 = analysis_file('session_gokhan.json')
+def analysis_attacker_informations():
+    attacker_informations_dictionary_gokhan = analysis_file('session_gokhan.json')
     # items2 = analysis_file('session2.json')
-
+    api_key_file = open("api_key.txt", "r")
+    api_key = api_key_file.read()
     # api request
-    r = requests.get(
-        'http://172.104.239.150/api/session/?api_key=576a6e2d696f4b2c9bf1101811287292&limit=1000')
-    items3 = json.loads(r.text)
-    items_api = {}
-    for idx, data in enumerate(items3['data']):
+    r = requests.get(api_key)
+    attacker_informations_dictionary_gokhan_in_json = json.loads(r.text)
+    attacker_informations_dictionary_omer = {}
+    for idx, data in enumerate(attacker_informations_dictionary_gokhan_in_json['data']):
         temp = {}
         temp.update({'source_ip': data['source_ip']})
         date = datetime.datetime.strptime(data['timestamp'], "%Y-%m-%dT%H:%M:%S.%f").replace(tzinfo=None)
         temp.update({'date': date})
         dat = {idx: temp}
-        items_api.update(dat)
-    index1 = []
-    a = dict_to_set(items1)
-    b = dict_to_set(items_api)
+        attacker_informations_dictionary_omer.update(dat)
+    attacker_informations_list_gokhan = []
+    a = dictionary_to_set(attacker_informations_dictionary_gokhan)
+    b = dictionary_to_set(attacker_informations_dictionary_omer)
     intersections = intersection_of_set(a, b)
     intersections_dict = {}
 
     for i in intersections:
-        for value, key in items1.items():
+        for value, key in attacker_informations_dictionary_gokhan.items():
             if i == key['source_ip']:
-                index1.append(value)
+                attacker_informations_list_gokhan.append(value)
 
     if request.headers.get("X-Requested-With") == "XMLHttpRequest":
         data = dict()
-        for idx, i in enumerate(index1):
-            date1 = items1[i]['date']
-            date2 = items_api[idx]['date']
+        for idx, i in enumerate(attacker_informations_list_gokhan):
+            date1 = attacker_informations_dictionary_gokhan[i]['date']
+            date2 = attacker_informations_dictionary_omer[idx]['date']
             temp = {}
-            temp.update({'source_ip': items1[i]['source_ip']})
+            temp.update({'source_ip': attacker_informations_dictionary_gokhan[i]['source_ip']})
             temp.update({'date1': date1})
             difference = abs(relativedelta(date1, date2))
             temp.update({'date2': date2})
@@ -89,7 +89,7 @@ def hello_world():
             data['html_intersections'] = render_template_string(template,
                                                                 intersections=intersections_dict.items())
         return jsonify(data)
-    return render_template('index.html', items1=items1.items(), items2=items_api.items())
+    return render_template('index.html', items1=attacker_informations_dictionary_gokhan.items(), items2=attacker_informations_dictionary_omer.items())
 
 
 if __name__ == '__main__':
